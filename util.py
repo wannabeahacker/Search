@@ -95,6 +95,9 @@ class PriorityQueue:
   """  
   def  __init__(self):  
     self.heap = []
+
+  def __len__(self):
+    return len(self.heap)
     
   def push(self, item, priority):
       pair = (priority,item)

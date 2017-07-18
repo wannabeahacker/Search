@@ -185,7 +185,7 @@ def breadthFirstSearch(problem):
   print "Start's successors:", problem.getSuccessors(problem.getStartState())
   """
 
-  result = util.Queue()
+  result = []
   node = problem.getStartState()
 
   frontier = util.Queue()
@@ -193,48 +193,78 @@ def breadthFirstSearch(problem):
   path = []
   result = util.Queue()
 
-  frontier.push((node,[])
+  frontier.push((node,[]))
   print "Is the current node the solution? ", problem.isGoalState(node)
   if problem.isGoalState(node):
     return result
-  count = 0
 
   while len(frontier) > 0:
-    count +=  1
-    print "Loop ", count
-    node = frontier.pop()
-    path.append(node)
+
+    stateQueue = frontier.pop()
+    node = stateQueue[0]
+    path = stateQueue[1]
+
     if problem.isGoalState(node):
       print "GOAL found!!!"
       print "result is ", result
-      return result
+      return path
     for next_state, action, cost in problem.getSuccessors(node):
-      print ">>> " ,frontier
+      new_path = list(path)
+
       if next_state not in explored:
 
         explored.add(node)
-        problem.startState = next_state
-
-
         new_path = list(path)
-        new_path.append(next_state)
+        new_path.append(getDirection(action))
+
         print new_path
-        frontier.push(next_state)
-        result.push(action)
-
-        
-
-      
-
-  #return "no path "
+        frontier.push((next_state,new_path))
+        #result.push(action)
+  print "no path found"
+  return []
         
 
   
       
 def uniformCostSearch(problem):
-  "Search the node of least total cost first. "
-  "*** YOUR CODE HERE ***"
-  util.raiseNotDefined()
+  result = []
+  node = problem.getStartState()
+
+  frontier = util.PriorityQueue()
+  explored = set()
+  path = []
+  result = util.Queue()
+
+  frontier.push((node,[],0),0)
+  print "Is the current node the solution? ", problem.isGoalState(node)
+  if problem.isGoalState(node):
+    return result
+
+  while len(frontier) > 0:
+
+    stateQueue = frontier.pop()
+    node = stateQueue[0]
+    path = stateQueue[1]
+    cost = stateQueue[2]
+
+    if problem.isGoalState(node):
+      print "GOAL found!!!"
+      print "result is ", result
+      return path
+    for next_state, action, stepCost in problem.getSuccessors(node):
+      new_path = list(path)
+      totalCost = cost + stepCost
+      if next_state not in explored:
+
+        explored.add(node)
+        new_path = list(path)
+        new_path.append(getDirection(action))
+
+        print new_path
+        frontier.push((next_state,new_path, totalCost),totalCost)
+        #result.push(action)
+  print "no path found"
+  return []
 
 def nullHeuristic(state, problem=None):
   """
